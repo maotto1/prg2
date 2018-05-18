@@ -1,12 +1,11 @@
 package gamefield;
 
-import fieldState.SetState;
 import fieldState.State;
 
-public abstract class Field {
+public abstract class Field<T extends State> {
 	
 	protected final int xCoordinate, yCoordinate;
-	protected State state;
+	protected T state;
 	
 	/**
 	 * auto correction of invalid inserts
@@ -22,7 +21,7 @@ public abstract class Field {
 		}
 		xCoordinate = x; 
 		yCoordinate = y;
-		state = SetState.WATER;
+		state = null;
 	}
 	
 	public int getXCoordinate() {
@@ -33,7 +32,7 @@ public abstract class Field {
 		return yCoordinate;	
 	}
 	
-	public State getState(){
+	public T getState(){
 		return this.state;
 	}
 	
@@ -42,6 +41,6 @@ public abstract class Field {
 	 * @param shipId only necessary if state = Ship
 	 * 
 	 */
-	abstract public boolean changeState(State state, int... shipId);
+	abstract public boolean changeState(T state, int... shipId);
 	
 }

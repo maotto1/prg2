@@ -1,15 +1,14 @@
 package gamefield;
 
 import fieldState.SetState;
-import fieldState.State;
 
-public class OwnField extends Field{
+public class OwnField extends Field<SetState>{
 	
 	private int shipId = -1;
-	private SetState state;
 	
-	OwnField(int x, int y) {
+	public OwnField(int x, int y) {
 		super(x, y);
+		state = SetState.WATER;
 	}
 	
 	public int getId() {
@@ -17,7 +16,7 @@ public class OwnField extends Field{
 	}
 
 	@Override
-	public boolean changeState(State state, int... shipId) {
+	public boolean changeState(SetState state, int... shipId) {
 		if ((shipId.length == 0 || shipId[0] == -1) && state == SetState.SHIP) {
 			System.out.println("wrong usage of changeState");
 			return false;

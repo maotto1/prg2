@@ -8,12 +8,18 @@ import fieldState.SetState;
 import fieldState.State;
 import game.Shot;
 
-public class MyGameField extends GameField {
+public class MyGameField extends GameField<SetState> {
 	
 	private HashMap<Integer,Ship> ships = new HashMap<Integer,Ship>();
 	
 	public MyGameField(){
 		remainingShips = 0;
+		fields = new OwnField[FIELD_SIZE[0]][FIELD_SIZE[1]];
+		for (int i=0; i<FIELD_SIZE[0]; i++) {
+			for (int j=0; j<FIELD_SIZE[1]; j++) {
+				fields[i][j] = new OwnField(i,j);
+			}
+		}
 	}
 	
 	@Override
@@ -53,10 +59,10 @@ public class MyGameField extends GameField {
 	 */
 	public boolean fitShip(int x0, int y0, int x1, int y1) {
 		ArrayList<OwnField> fields = getFieldsFromCoordinates(x0, y0, x1, y1);
-		for (Field field : fields) {
+		for (Field<SetState> field : fields) {
 			if (field.getState() == SetState.BLOCKED || field.getState() == SetState.SHIP)
 				return false;
-			for (Field neighbourField :  this.getNeighbours(field)) {		// redundant
+			for (Field<SetState> neighbourField :  this.getNeighbours(field)) {		// redundant
 				if (neighbourField.getState() == SetState.SHIP)
 					return false;
 			}
@@ -133,9 +139,9 @@ public class MyGameField extends GameField {
 	@Override
 	public ArrayList<? extends State> getFieldStates() {
 		ArrayList<SetState> states = new ArrayList<SetState>();
-		for (Field[] fieldRow : this.fields) {
-			for (Field fieldEntry : fieldRow) {
-				states.add((SetState) fieldEntry.getState());
+		for (Field<SetState>[] fieldRow : this.fields) {
+			for (Field<SetState> fieldEntry : fieldRow) {
+				states.add( fieldEntry.getState());
 			}
 		}
 		return states;

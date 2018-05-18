@@ -6,7 +6,7 @@ public class Shot {
 	
 	private final int x,y;
 	
-	Shot(int x, int y){
+	public Shot(int x, int y){
 		x = Math.abs(x);
 		y = Math.abs(y);
 		if (x >= GameField.FIELD_SIZE[0] || y >= GameField.FIELD_SIZE[1]) {

@@ -11,12 +11,15 @@ public class Ship {
 	private int remainingParts;
 	private final OwnField[] fields;
 	
-	Ship(int length, int id, MyGameField gameField, OwnField[] fields){
+	public Ship(int length, int id, MyGameField gameField, OwnField[] fields){
 		this.length = length;
 		remainingParts = length;
 		this.gameField = gameField;
 		this.id = id;
 		this.fields = fields;
+		for (OwnField field : this.fields ) {
+			field.changeState(SetState.SHIP, id);
+		}
 	}
 	
 	/**
@@ -29,7 +32,7 @@ public class Ship {
 	public Response treatShot(Shot shot){
 		Response reponse = Response.WATER;
 		for (OwnField field : fields) {
-			if (field.getXCoordinate() == shot.getX() && field.getXCoordinate() == shot.getY()
+			if (field.getXCoordinate() == shot.getX() && field.getYCoordinate() == shot.getY()
 					&& field.getState() == SetState.SHIP) {
 				--remainingParts;
 				field.changeState(SetState.WATER);
@@ -48,7 +51,7 @@ public class Ship {
 	public void destroy() {
 		for (OwnField field : fields) {
 			field.changeState(SetState.WATER);
-			for (Field neighbourField : gameField.getNeighbours(field))
+			for (Field<SetState> neighbourField : gameField.getNeighbours(field))
 				neighbourField.changeState(SetState.WATER);
 		}
 	}

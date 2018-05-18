@@ -1,13 +1,13 @@
 package gamefield;
 
 import fieldState.KnownFieldState;
-import fieldState.State;
 
-public class AdversaryField extends Field{
+
+public class AdversaryField extends Field<KnownFieldState>{
 	
-	private KnownFieldState state;
+	//private KnownFieldState state;
 	
-	AdversaryField(int x, int y) {
+	public AdversaryField(int x, int y) {
 		super(x, y);
 		state = KnownFieldState.UNKNOWN;
 	}
@@ -21,7 +21,7 @@ public class AdversaryField extends Field{
 	 * @return whether change was possible
 	 */
 	@Override
-	public boolean changeState(State state, int... shipId) {
+	public boolean changeState(KnownFieldState state, int... shipId) {
 		boolean succes = false;
 		if (this.state == KnownFieldState.UNKNOWN) {
 			this.state  = (KnownFieldState) state;

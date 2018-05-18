@@ -4,14 +4,22 @@ import java.util.ArrayList;
 
 import fieldState.KnownFieldState;
 import fieldState.Response;
-import fieldState.SetState;
 import fieldState.State;
 import game.Shot;
 
-public class AdversaryGameField extends GameField {
+public class AdversaryGameField extends GameField<KnownFieldState> {
 	
 	private int sunkedShips = 0;
 	private Shot lastShot = null;
+	
+	public AdversaryGameField(){
+		fields = new AdversaryField[FIELD_SIZE[0]][FIELD_SIZE[1]];
+		for (int i=0; i<FIELD_SIZE[0]; i++) {
+			for (int j=0; j<FIELD_SIZE[1]; j++) {
+				fields[i][j] = new AdversaryField(i,j);
+			}
+		}
+	}
 	
 	@Override
 	public Response treatShot(Shot shot) {
@@ -46,9 +54,9 @@ public class AdversaryGameField extends GameField {
 	 * marks !!!after a ship was sunk the water fields
 	 * @param field
 	 */
-	private void treatNeighbourFields(Field field) {
-		ArrayList<Field> neighbours = this.getNeighbours(field);
-		for (Field neighbour : neighbours) {
+	private void treatNeighbourFields(Field<KnownFieldState> field) {
+		ArrayList<Field<KnownFieldState>> neighbours = this.getNeighbours(field);
+		for (Field<KnownFieldState> neighbour : neighbours) {
 			if (neighbour.getState() == KnownFieldState.HIT) {
 				neighbour.changeState(KnownFieldState.SUNK);
 				treatNeighbourFields(neighbour);
@@ -62,11 +70,17 @@ public class AdversaryGameField extends GameField {
 	@Override
 	public ArrayList<? extends State> getFieldStates() {
 		ArrayList<KnownFieldState> states = new ArrayList<KnownFieldState>();
-		for (Field[] fieldRow : this.fields) {
-			for (Field fieldEntry : fieldRow) {
+		for (Field<KnownFieldState>[] fieldRow : this.fields) {
+			for (Field<KnownFieldState> fieldEntry : fieldRow) {
 				states.add((KnownFieldState) fieldEntry.getState());
 			}
 		}
 		return states;
 	}
+
+	public int getSunkedShips() {
+		return sunkedShips;
+	}
+
+
 }
