@@ -35,6 +35,6 @@ public abstract class GameField<T extends State> {
 		return response;
 	}
 	
-	public abstract ArrayList<? extends State> getFieldStates();
+	public abstract ArrayList<ArrayList<T>> getFieldStates();
 
 }

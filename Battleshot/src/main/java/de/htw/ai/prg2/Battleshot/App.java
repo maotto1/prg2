@@ -1,13 +1,9 @@
 package de.htw.ai.prg2.Battleshot;
 
-
-import static org.junit.Assert.assertEquals;
-
-import fieldState.Response;
+import control.GameControl;
 import game.Shot;
 import gamefield.AdversaryField;
 import gamefield.AdversaryGameField;
-import gamefield.GameField;
 import gamefield.MyGameField;
 import gamefield.OwnField;
 import gamefield.Ship;
@@ -20,10 +16,10 @@ import gui.SetShipScreen;
 public class App 
 {
     public static void main( String[] args )
-    {	
-    	int x = 51 % GameField.FIELD_SIZE[0] ;
-    	
-        //new SetShipScreen();
+    {	    	
+    	GameControl game = new GameControl();
+    	game.initialize();
+        new SetShipScreen(game);
     	AdversaryGameField f= new AdversaryGameField();
     	f.treatShot(new Shot(2,2));
     	AdversaryField field = new AdversaryField(0,0);

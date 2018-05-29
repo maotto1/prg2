@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import fieldState.Response;
 import fieldState.SetState;
-import fieldState.State;
 import game.Shot;
 
 public class MyGameField extends GameField<SetState> {
@@ -43,12 +42,19 @@ public class MyGameField extends GameField<SetState> {
 		return null;
 	}
 	
+	public int findShipId(int x, int y) {
+		return ((OwnField) fields[x][y]).getId();
+	}
 	
 	private Ship findShip(OwnField field) {
 		int id = field.getId();
 		if (id == -1)  // -1 signifies: there isn't any  ship
 			return null;
 		return ships.get(id);
+	}
+	
+	public int lengthOfShip(int shipId) {
+		return ships.get(shipId).length;
 	}
 	
 	/**
@@ -137,11 +143,13 @@ public class MyGameField extends GameField<SetState> {
 	}
 
 	@Override
-	public ArrayList<? extends State> getFieldStates() {
-		ArrayList<SetState> states = new ArrayList<SetState>();
+	public ArrayList<ArrayList<SetState>> getFieldStates() {
+		ArrayList<ArrayList<SetState>> states = new ArrayList<ArrayList<SetState>>();
+		ArrayList<SetState> statesRow;
 		for (Field<SetState>[] fieldRow : this.fields) {
+			statesRow = new ArrayList<SetState>();
 			for (Field<SetState> fieldEntry : fieldRow) {
-				states.add( fieldEntry.getState());
+				statesRow.add((SetState) fieldEntry.getState());
 			}
 		}
 		return states;

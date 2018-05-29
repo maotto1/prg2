@@ -5,10 +5,12 @@ import fieldState.SetState;
 public class OwnField extends Field<SetState>{
 	
 	private int shipId = -1;
+	private boolean hit;
 	
 	public OwnField(int x, int y) {
 		super(x, y);
 		state = SetState.WATER;
+		hit = false;
 	}
 	
 	public int getId() {
@@ -29,6 +31,14 @@ public class OwnField extends Field<SetState>{
 		}
 		this.state = (SetState) state;
 		return true;
+	}
+
+	public boolean isHit() {
+		return hit;
+	}
+
+	public void shotOn() {
+		this.hit = true;
 	}
 
 }

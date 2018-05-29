@@ -32,11 +32,13 @@ public class Ship {
 	public Response treatShot(Shot shot){
 		Response reponse = Response.WATER;
 		for (OwnField field : fields) {
-			if (field.getXCoordinate() == shot.getX() && field.getYCoordinate() == shot.getY()
-					&& field.getState() == SetState.SHIP) {
-				--remainingParts;
-				field.changeState(SetState.WATER);
-				reponse = Response.HIT;
+			if (field.getXCoordinate() == shot.getX() && field.getYCoordinate() == shot.getY()) {
+				field.shotOn();
+				if (field.getState() == SetState.SHIP) {
+					--remainingParts;
+					field.changeState(SetState.WATER);
+					reponse = Response.HIT;
+				}
 			}
 		}
 		if (remainingParts == 0)

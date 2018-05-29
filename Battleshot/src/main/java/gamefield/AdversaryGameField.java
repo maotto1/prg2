@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import fieldState.KnownFieldState;
 import fieldState.Response;
-import fieldState.State;
 import game.Shot;
 
 public class AdversaryGameField extends GameField<KnownFieldState> {
@@ -68,11 +67,13 @@ public class AdversaryGameField extends GameField<KnownFieldState> {
 	}
 
 	@Override
-	public ArrayList<? extends State> getFieldStates() {
-		ArrayList<KnownFieldState> states = new ArrayList<KnownFieldState>();
+	public ArrayList<ArrayList<KnownFieldState>> getFieldStates() {
+		ArrayList<ArrayList<KnownFieldState>> states = new ArrayList<ArrayList<KnownFieldState>>();
+		ArrayList<KnownFieldState> statesRow;
 		for (Field<KnownFieldState>[] fieldRow : this.fields) {
+			statesRow = new ArrayList<KnownFieldState>();
 			for (Field<KnownFieldState> fieldEntry : fieldRow) {
-				states.add((KnownFieldState) fieldEntry.getState());
+				statesRow.add((KnownFieldState) fieldEntry.getState());
 			}
 		}
 		return states;
