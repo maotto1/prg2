@@ -1,10 +1,9 @@
-package gamefield;
+package model;
 
 import java.util.ArrayList;
 
 import fieldState.Response;
 import fieldState.State;
-import game.Shot;
 
 public abstract class GameField<T extends State> {
 	protected Field<T>[][] fields = null; // = new Field[FIELD_SIZE[0]][FIELD_SIZE[1]];
@@ -26,7 +25,7 @@ public abstract class GameField<T extends State> {
 		for (int x = -1;  x <= 1; x += 1 ) {
 			if (x0 + x >= 0 && x0 +x < FIELD_SIZE[0]) {
 				for (int y = -1;  y <= 1; y += 1 ) {
-					if (y0 + y >= 0 && y0 +y < FIELD_SIZE[1] && x+y == 1) {
+					if (y0 + y >= 0 && y0 +y < FIELD_SIZE[1] && Math.abs(x+y) == 1) {
 						response.add(fields[x0+x][y0+y]);
 					}
 				}

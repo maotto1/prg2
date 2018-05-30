@@ -2,11 +2,16 @@ package gamefield;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import fieldState.Response;
-import game.Shot;
+import model.MyGameField;
+import model.OwnField;
+import model.Ship;
+import model.Shot;
 
 public class ShipTest {
 
@@ -14,7 +19,10 @@ public class ShipTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		ship = new Ship(2, 11111, new MyGameField(), new OwnField[] {new OwnField(3, 2) , new OwnField(4, 2)});
+		ArrayList<OwnField> list = new ArrayList<OwnField>();
+		list.add(new OwnField(3, 2));
+		list.add(new OwnField(4, 2));
+		ship = new Ship(2, 11111, new MyGameField(), list);
 	}
 
 	@Test

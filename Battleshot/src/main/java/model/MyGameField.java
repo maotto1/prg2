@@ -1,11 +1,10 @@
-package gamefield;
+package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import fieldState.Response;
 import fieldState.SetState;
-import game.Shot;
 
 public class MyGameField extends GameField<SetState> {
 	
@@ -86,23 +85,23 @@ public class MyGameField extends GameField<SetState> {
 	 */
 	private ArrayList<OwnField> getFieldsFromCoordinates(int x0, int y0, int x1, int y1) {
 		ArrayList<OwnField> wantedFields = new ArrayList<OwnField>();
-		if (x0 > x1) {
+		if (x0 > x1 && y0 == y1) {
 			int x = x1; 
 			x1 = x0;
 			x0 = x;
 		}
-		else if (y0 > y1) {
+		else if (y0 > y1 && x0 == x1) {
 			int y = y1; 
 			y1 = y0;
 			y0 = y;
 		}
 		if (x0 == x1) {
-			for (int i=0; i< y1-y0; i++) {
+			for (int i=0; i<= y1-y0; i++) {
 				wantedFields.add((OwnField) fields[x0][y0+i]);
 			}
 		}
 		else if (y0 == y1) {
-			for (int i=0; i< x1-x0; i++) {
+			for (int i=0; i<= x1-x0; i++) {
 				wantedFields.add((OwnField) fields[x0+i][y0]);
 			}
 		}
@@ -119,9 +118,10 @@ public class MyGameField extends GameField<SetState> {
 	 * @param id
 	 * @return
 	 */
-	public boolean setShip(Ship ship,  int x0, int y0, int x1, int y1, int id) {
+	public boolean setShip(int x0, int y0, int x1, int y1, int id, int length) {
 		if (!fitShip(x0, y0, x1, y1) || ships.containsKey(id) || id == -1)
 			return false;
+		Ship ship = new Ship(length, id, this, getFieldsFromCoordinates(x0, y0, x1, y1));
 		ships.put(id, ship);
 		++remainingShips;
 		return true;
@@ -151,6 +151,7 @@ public class MyGameField extends GameField<SetState> {
 			for (Field<SetState> fieldEntry : fieldRow) {
 				statesRow.add((SetState) fieldEntry.getState());
 			}
+			states.add(statesRow);
 		}
 		return states;
 	}

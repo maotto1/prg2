@@ -1,10 +1,9 @@
-package gamefield;
+package model;
 
 import java.util.ArrayList;
 
 import fieldState.KnownFieldState;
 import fieldState.Response;
-import game.Shot;
 
 public class AdversaryGameField extends GameField<KnownFieldState> {
 	
@@ -32,18 +31,13 @@ public class AdversaryGameField extends GameField<KnownFieldState> {
 				field.changeState(KnownFieldState.WATER);
 		else if (response == Response.HIT) {
 			if (field.changeState(KnownFieldState.HIT)) {
-				treatNeighbourFields(field);
-			}
-		}
-		else if (response == Response.HIT) {
-			if (field.changeState(KnownFieldState.HIT)) {
 				//treatNeighbourFields(field);
 			}
 		}
 		else if (response == Response.HIT_AND_SUNK || response == Response.HIT_AND_SUNK_LOOSED) {
 			++sunkedShips;
 			if (field.changeState(KnownFieldState.SUNK)) {
-				treatNeighbourFields(field);
+				treatNeighbourFieldsOfSunkedShip(field);
 			}
 		}
 
@@ -53,12 +47,12 @@ public class AdversaryGameField extends GameField<KnownFieldState> {
 	 * marks !!!after a ship was sunk the water fields
 	 * @param field
 	 */
-	private void treatNeighbourFields(Field<KnownFieldState> field) {
+	private void treatNeighbourFieldsOfSunkedShip(Field<KnownFieldState> field) {
 		ArrayList<Field<KnownFieldState>> neighbours = this.getNeighbours(field);
 		for (Field<KnownFieldState> neighbour : neighbours) {
 			if (neighbour.getState() == KnownFieldState.HIT) {
 				neighbour.changeState(KnownFieldState.SUNK);
-				treatNeighbourFields(neighbour);
+				treatNeighbourFieldsOfSunkedShip(neighbour);
 				
 			}
 			if (neighbour.getState() == KnownFieldState.UNKNOWN)
@@ -75,6 +69,7 @@ public class AdversaryGameField extends GameField<KnownFieldState> {
 			for (Field<KnownFieldState> fieldEntry : fieldRow) {
 				statesRow.add((KnownFieldState) fieldEntry.getState());
 			}
+			states.add(statesRow);
 		}
 		return states;
 	}

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import fieldState.KnownFieldState;
 import fieldState.SetState;
+import model.OwnField;
 
 public class OwnFieldTest {
 

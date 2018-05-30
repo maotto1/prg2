@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -9,10 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import control.AdversaryFieldMouseListener;
 import control.GameControl;
 import fieldState.KnownFieldState;
 import fieldState.SetState;
-import gamefield.GameField;
+import model.GameField;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class GameScreen extends JFrame {
 		JPanel rightPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
 		MyPanel panelRight, panelLeft;
-		MyMouseListener listener;
+		AdversaryFieldMouseListener listener;
 		rightPanel.setLayout(new GridLayout(GameField.FIELD_SIZE[0],GameField.FIELD_SIZE[1]));
 		leftPanel.setLayout(new GridLayout(GameField.FIELD_SIZE[0],GameField.FIELD_SIZE[1]));
 		fieldsRight = new MyPanel[GameField.FIELD_SIZE[0]][GameField.FIELD_SIZE[1]];
@@ -78,6 +78,8 @@ public class GameScreen extends JFrame {
 			for (int j=0; j<GameField.FIELD_SIZE[1]; j++) {
 				panelRight = new MyPanel(i,j);
 				panelLeft = new MyPanel(i,j);
+				listener = new AdversaryFieldMouseListener(game);
+				panelRight.addMouseListener(listener);
 				panelRight.setSize(getContentPane().getWidth()/10, getContentPane().getWidth()/10);
 				panelRight.setBorder(BorderFactory.createLineBorder(Color.black));
 				panelLeft.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -87,8 +89,8 @@ public class GameScreen extends JFrame {
 				fieldsLeft[i][j] = panelLeft;
 				rightPanel.add(panelRight);
 				leftPanel.add(panelLeft);
-				listener = new MyMouseListener(game);
-				panelRight.addMouseListener(listener );
+				//   listener = new MyMouseListener(game);
+				//  panelRight.addMouseListener(listener );
 
 			}
 		}

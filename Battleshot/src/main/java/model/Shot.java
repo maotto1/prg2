@@ -1,6 +1,4 @@
-package game;
-
-import gamefield.GameField;
+package model;
 
 public class Shot {
 	

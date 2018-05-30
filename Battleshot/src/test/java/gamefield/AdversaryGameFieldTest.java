@@ -9,7 +9,10 @@ import org.junit.Test;
 
 import fieldState.KnownFieldState;
 import fieldState.Response;
-import game.Shot;
+import model.AdversaryField;
+import model.AdversaryGameField;
+import model.Field;
+import model.Shot;
 
 public class AdversaryGameFieldTest {
 	AdversaryGameField f;

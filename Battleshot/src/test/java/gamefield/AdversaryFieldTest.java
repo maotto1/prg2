@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fieldState.KnownFieldState;
+import model.AdversaryField;
 
 public class AdversaryFieldTest {
 	

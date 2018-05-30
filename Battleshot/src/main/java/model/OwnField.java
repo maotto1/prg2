@@ -1,4 +1,4 @@
-package gamefield;
+package model;
 
 import fieldState.SetState;
 
