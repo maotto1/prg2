@@ -1,6 +1,10 @@
 package control;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import fieldState.Response;
 import fieldState.SetState;
 import gui.GameScreen;
@@ -9,19 +13,68 @@ import model.GameField;
 import model.MyGameField;
 import model.Shot;
 
-public class GameControl {
+public class GameControl implements Serializable{
 	
 	private final MyGameField myGameField;
-	private final AdversaryGameField adversaryGameField;
+	private AdversaryGameField adversaryGameField;
 	public final static int[] ALLOWED_SHIPS = new int[] {0,0,4,3,2,1}; 
 	private int[] settedShips = new int[ALLOWED_SHIPS.length];
 	private int lastUsedId;
 	private boolean myTurn = true;
 	private GameScreen gameScreen;
+	private Shot lastShot; 
+	private final NetworkControl networkControl;
+	private Thread serverThread, clientThread;
+	public boolean wantRematch;
 	
 	public GameControl() {
 		myGameField = new MyGameField();
-		adversaryGameField = new AdversaryGameField();
+		//adversaryGameField = new AdversaryGameField();
+		networkControl = new NetworkControl(this);
+	}
+	
+	public void connect() {
+		serverThread = new Thread (new Runnable() {
+			@Override
+			public void run() {
+				networkControl.bindExportObject();
+				networkControl.runServer();
+			}
+		});
+		serverThread.start();
+		
+		clientThread = new Thread (new Runnable() {
+			private boolean interrupt = false;
+			
+			@Override
+			public void run() {
+				
+				boolean bool = networkControl.runClient();
+				int counter = 1;
+				while (!bool) {
+					bool = networkControl.runClient();
+					++counter;
+					if (interrupt)
+						bool = true;
+				}
+				if (!interrupt) {
+					System.out.println("benötigte verbindungsversuche:  " +counter);
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					networkControl.lookup();
+				}
+	
+			}
+			
+			public void interrupt() {
+				System.out.println(Thread.currentThread().getName() + ": interrupt() aufgerufen");
+				interrupt = true;
+			}
+		});
+		clientThread.start();
 	}
 	
 	public void initialize() {
@@ -113,9 +166,15 @@ public class GameControl {
 	public void fire(Shot shot) {
 		if (myTurn) {
 			adversaryGameField.treatShot(shot);
+			Response response = Response.WATER;
+			
 			// to do : Network 
 			// testweise Annahme: antwort ist wasser
-			Response response = Response.WATER;
+			response = networkControl.fire(shot);
+			
+			if (response == Response.WATER)
+				myTurn = false;
+			
 			adversaryGameField.treatReponse(response);
 			gameScreen.refreshAdversaryField(adversaryGameField.getFieldStates());
 			
@@ -124,12 +183,54 @@ public class GameControl {
 		
 	}
 	
+	/**
+	 * entry door for other player
+	 * @param shot
+	 */
+	public Response treatShot(Shot shot) {
+		gameScreen.markShootedField(shot.getX(), shot.getY());
+		lastShot = shot;
+		Response response = myGameField.treatShot(shot);
+		if (response == Response.WATER)
+			myTurn = true;
+		if (response == Response.HIT_AND_SUNK_LOOSED) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					int answer = JOptionPane.showOptionDialog(null, "Congratulations, you won! \nDo you want a rematch?","Rematch",
+			                JOptionPane.YES_NO_OPTION,
+			                JOptionPane.QUESTION_MESSAGE, null, 
+			                null, null);
+					switch (answer) {
+					case JOptionPane.NO_OPTION:
+						System.exit(1);
+						break;
+					case JOptionPane.YES_OPTION:
+						
+					}
+				}
+				
+			}).start();
+
+		}
+		return response;
+	}
+	
 	
 	public void startMatch() {
 		gameScreen = new GameScreen(this);
 		gameScreen.refreshMyField(myGameField.getFieldStates());
 		gameScreen.setVisible(true);
 		gameScreen.setTitle("Match");
+		adversaryGameField = new AdversaryGameField();
+	}
+
+	public void abortConnect() {
+		clientThread.interrupt();
+		System.out.println(clientThread.getName() + " should be interrupted");
+		serverThread.interrupt();
+		System.out.println(serverThread.getName() + " should be interrupted");
 		
 	}
 

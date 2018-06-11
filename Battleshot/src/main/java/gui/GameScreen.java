@@ -1,11 +1,18 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import control.AdversaryFieldMouseListener;
@@ -15,6 +22,7 @@ import fieldState.SetState;
 import model.GameField;
 
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
 
 public class GameScreen extends JFrame {
@@ -26,6 +34,7 @@ public class GameScreen extends JFrame {
 	public static final Color SUNK_COLOR = Color.CYAN;
 	private final GameControl game;
 	private JPanel contentPane;
+	private int lastMarkedY=-1, lastMarkedX=-1;
 	/**
 	 * Left own field, right adversary field
 	 */
@@ -54,7 +63,7 @@ public class GameScreen extends JFrame {
 	public GameScreen(GameControl game) {
 		this.game = game;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 763, 456);
+		setBounds(150, 150, 900, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,11 +109,25 @@ public class GameScreen extends JFrame {
 
 	}
 	
+	public void markShootedField(int i, int j) {
+		if ( (lastMarkedX != -1) && (lastMarkedY != -1) ) {
+			fieldsLeft[lastMarkedX][lastMarkedY].setBorder(BorderFactory.createLineBorder(Color.black));
+		}
+		fieldsLeft[i][j].setBorder(new BevelBorder(BevelBorder.LOWERED));
+		JLabel label = new JLabel("X");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setVerticalAlignment(SwingConstants.CENTER);
+		label.setSize(fieldsLeft[i][j].getWidth(), fieldsLeft[i][j].getHeight());
+		fieldsLeft[i][j].add(label);
+		fieldsLeft[i][j].repaint();
+		lastMarkedX = i;
+		lastMarkedY = j;
+	}
+	
 	
 	public void refreshMyField(ArrayList<ArrayList<SetState>> states) {
 		for (int i=0; i<GameField.FIELD_SIZE[0]; i++) {
 			for (int j=0; j<GameField.FIELD_SIZE[1]; j++) {		// OutOfBounds abfangen??
-				//if ()    roter Rand für beschossene Felder
 				if (states.get(i).get(j) == SetState.WATER || states.get(i).get(j) == SetState.BLOCKED) {
 					fieldsLeft[i][j].setBackground(SetShipScreen.WATER_COLOR);
 				}

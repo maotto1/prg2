@@ -9,6 +9,10 @@ import model.Shot;
 public class AdversaryFieldMouseListener implements MouseListener{
 	
 	private final GameControl game;
+	/**
+	 * zur Vermeidung von Doppelklicks
+	 */
+	private int lastClickedX = -1, lastClickedY = -1;
 	
 	public AdversaryFieldMouseListener(GameControl game){
 		this.game = game;
@@ -16,8 +20,14 @@ public class AdversaryFieldMouseListener implements MouseListener{
 	
 
 	public void mouseClicked(MouseEvent e) {
-		Shot shot = new Shot(((MyPanel) e.getComponent()).x, ((MyPanel) e.getComponent()).y);
-		game.fire(shot);
+		int x = ((MyPanel) e.getComponent()).x;
+		int y = ((MyPanel) e.getComponent()).y;
+		if (lastClickedX != x && lastClickedY != y ) {
+			Shot shot = new Shot(x, y);
+			game.fire(shot);
+		}
+		lastClickedX = x; 
+		lastClickedY = y;
 	}
 
 	public void mousePressed(MouseEvent e) {

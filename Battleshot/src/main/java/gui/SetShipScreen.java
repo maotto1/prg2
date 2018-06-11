@@ -58,9 +58,12 @@ public class SetShipScreen extends JFrame {
 	public SetShipScreen(GameControl game) {
 		this.game = game;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 763, 456);
+		setBounds(150, 150, 763, 456);
 		
 		splitPane = new JSplitPane();
+		splitPane.setDividerLocation(0.7);
+		
+		
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

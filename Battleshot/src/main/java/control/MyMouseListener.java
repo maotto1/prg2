@@ -21,7 +21,7 @@ public class MyMouseListener implements MouseListener {
 	
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
-			System.out.println("handle nur bei doppelklick");
+			//System.out.println("handle nur bei doppelklick");
 		}
 		int x = ((MyPanel) e.getComponent()).x;
 		int y = ((MyPanel) e.getComponent()).y;
